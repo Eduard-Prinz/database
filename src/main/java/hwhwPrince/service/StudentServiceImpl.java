@@ -11,8 +11,7 @@ import java.util.List;
 
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     public StudentServiceImpl(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -20,7 +19,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getStudentById(long id) {
-        return studentRepository.findById(id).get();
+        return studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
     }
 
     @Override
@@ -33,10 +32,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateStudent(String name, int age) {
-        Student student = new Student();
-        student.setName(name);
-        student.setAge(age);
-        studentRepository.save(student);
+    }
+
+    @Override
+    public void updateStudent(long id, String name, int age) {
+        Student existingStudent = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+        existingStudent.setName(name);
+        existingStudent.setAge(age);
+        studentRepository.save(existingStudent);
     }
 
     @Override

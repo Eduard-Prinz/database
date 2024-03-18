@@ -8,8 +8,7 @@ import hwhwPrince.repository.FacultyRepository;
 import java.util.*;
 
 @Service
-public class FacultyServiceImpl implements FacultyService{
-
+public class FacultyServiceImpl implements FacultyService {
 
     private final FacultyRepository facultyRepository;
 
@@ -27,12 +26,12 @@ public class FacultyServiceImpl implements FacultyService{
 
     @Override
     public Faculty getFacultyById(long id) {
-        return facultyRepository.findById(id).get();
+        return facultyRepository.findById(id).orElseThrow(() -> new RuntimeException("Faculty not found with id: " + id));
     }
 
     @Override
     public Faculty updateFaculty(Long id, String name, String color) {
-        Faculty faculty = facultyRepository.findById(id).get();
+        Faculty faculty = facultyRepository.findById(id).orElseThrow(() -> new RuntimeException("Faculty not found with id: " + id));
         faculty.setName(name);
         faculty.setColor(color);
         return facultyRepository.save(faculty);
